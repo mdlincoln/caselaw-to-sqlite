@@ -1,11 +1,11 @@
 PRAGMA foreign_keys = ON;
 BEGIN;
 CREATE TABLE IF NOT EXISTS courts (
-	id INTEGER PRIMARY KEY NOT NULL,
-	`name` TEXT NOT NULL,
-	name_abbreviation TEXT NOT NULL,
-	jurisdiction_url TEXT,
-	slug TEXT NOT NULL
+  id INTEGER PRIMARY KEY NOT NULL,
+  `name` TEXT NOT NULL,
+  name_abbreviation TEXT NOT NULL,
+  jurisdiction_url TEXT,
+  slug TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS jurisdictions (
   id INTEGER PRIMARY KEY NOT NULL,
