@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -ne "extracting cases..."
-xzcat $1 | jq -r '[.id, .name, .name_abbreviation, .decision_date, .docket_number, .first_page, .last_page, .volume.volume_number, .reporter.full_name, .court.id, .jurisdiction.id, .casbody.status, .casebody.data.head_matter] | @csv' > cases.csv
+xzcat $1 | jq -r '[.id, .name, .name_abbreviation, .decision_date, .docket_number, .first_page, .last_page, .volume.volume_number, .reporter.full_name, .court.id, .jurisdiction.id, .casebody.status, .casebody.data.head_matter] | @csv' > cases.csv
 echo "done"
 
 echo -ne "extracting citations..."
