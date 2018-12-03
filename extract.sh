@@ -1,5 +1,7 @@
 #!/bin/bash
 
+function case_law {
+
 echo -ne "extracting cases..."
 xzcat $1 | jq -r '[.id, .name, .name_abbreviation, .decision_date, .docket_number, .first_page, .last_page, .volume.volume_number, .reporter.full_name, .court.id, .jurisdiction.id, .casebody.status, .casebody.data.head_matter] | @csv' > cases.csv
 echo "done"
@@ -34,3 +36,12 @@ echo "done"
 
 echo "Loading into caselaw.sqlite"
 sqlite3 -bail -echo caselaw.sqlite ".read import.sql"
+
+}
+
+while [ $# -ne 0 ]
+  do
+    echo "Current Parameter: $1 , Remaining $#"
+    case_law $1
+    shift
+done
