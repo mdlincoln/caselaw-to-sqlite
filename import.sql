@@ -1,5 +1,14 @@
 PRAGMA foreign_keys = ON;
+.mode csv
 BEGIN;
+CREATE TABLE IF NOT EXISTS temporary_courts (
+  court_id INTEGER NOT NULL,
+  `name` TEXT NOT NULL,
+  name_abbreviation TEXT NOT NULL,
+  jurisdiction_url TEXT,
+  slug TEXT NOT NULL
+);
+.import courts.csv temporary_courts
 CREATE TABLE IF NOT EXISTS courts (
   court_id INTEGER PRIMARY KEY NOT NULL,
   `name` TEXT NOT NULL,
@@ -7,6 +16,16 @@ CREATE TABLE IF NOT EXISTS courts (
   jurisdiction_url TEXT,
   slug TEXT NOT NULL
 );
+INSERT INTO courts SELECT DISTINCT * from temporary_courts;
+DROP TABLE temporary_courts;
+CREATE TABLE IF NOT EXISTS temporary_jurisdictions (
+  jurisdiction_id INTEGER NOT NULL,
+  slug TEXT NOT NULL,
+  `name` TEXT NOT NULL,
+  name_long TEXT NOT NULL,
+  whitelisted TEXT NOT NULL
+);
+.import jurisdictions.csv temporary_jurisdictions
 CREATE TABLE IF NOT EXISTS jurisdictions (
   jurisdiction_id INTEGER PRIMARY KEY NOT NULL,
   slug TEXT NOT NULL,
@@ -14,6 +33,8 @@ CREATE TABLE IF NOT EXISTS jurisdictions (
   name_long TEXT NOT NULL,
   whitelisted TEXT NOT NULL
 );
+INSERT INTO jurisdictions SELECT DISTINCT * from temporary_jurisdictions;
+DROP TABLE temporary_jurisdictions;
 CREATE TABLE IF NOT EXISTS cases (
   case_id INTEGER PRIMARY KEY NOT NULL,
   `name` TEXT NOT NULL,
@@ -53,9 +74,6 @@ CREATE TABLE IF NOT EXISTS judges (
   judge TEXT NOT NULL,
   FOREIGN KEY (case_id) REFERENCES cases(case_id)
 );
-.mode csv
-.import courts.csv courts
-.import jurisdictions.csv jurisdictions
 .import cases.csv cases
 .import opinions.csv opinions
 .import parties.csv parties

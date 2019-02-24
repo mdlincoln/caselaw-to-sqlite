@@ -11,11 +11,11 @@ xzcat $1 | jq -r '{"id": .id, "citations": .citations[]} | [.id, .citations.type
 echo "done"
 
 echo -ne "extracting courts..."
-xzcat $1 | jq -r '.court | [.id, .name, .name_abbreviation, .jurisdiction.url, .slug] | @csv' | sort | uniq > courts.csv
+xzcat "$1" | jq -r '.court | [.id, .name, .name_abbreviation, .jurisdiction.url, .slug] | @csv' > courts.csv
 echo "done"
 
 echo -ne "extracting jurisdictions..."
-xzcat $1 | jq -r '.jurisdiction | [.id, .slug, .name, .name_long, .whitelisted] | @csv' | sort | uniq > jurisdictions.csv
+xzcat "$1" | jq -r '.jurisdiction | [.id, .slug, .name, .name_long, .whitelisted] | @csv' > jurisdictions.csv
 echo "done"
 
 echo -ne "extracting opinions..."
