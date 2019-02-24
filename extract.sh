@@ -1,13 +1,15 @@
 #!/bin/bash
 
+set -e
+
 function case_law {
 
 echo -ne "extracting cases..."
-xzcat $1 | jq -r '[.id, .name, .name_abbreviation, .decision_date, .docket_number, .first_page, .last_page, .volume.volume_number, .reporter.full_name, .court.id, .jurisdiction.id, .casebody.status, .casebody.data.head_matter] | @csv' > cases.csv
+xzcat "$1" | jq -r '[.id, .name, .name_abbreviation, .decision_date, .docket_number, .first_page, .last_page, .volume.volume_number, .reporter.full_name, .court.id, .jurisdiction.id, .casebody.status, .casebody.data.head_matter] | @csv' > cases.csv
 echo "done"
 
 echo -ne "extracting citations..."
-xzcat $1 | jq -r '{"id": .id, "citations": .citations[]} | [.id, .citations.type, .citations.cite] | @csv' > citations.csv
+xzcat "$1" | jq -r '{"id": .id, "citations": .citations[]} | [.id, .citations.type, .citations.cite] | @csv' > citations.csv
 echo "done"
 
 echo -ne "extracting courts..."
@@ -19,19 +21,19 @@ xzcat "$1" | jq -r '.jurisdiction | [.id, .slug, .name, .name_long, .whitelisted
 echo "done"
 
 echo -ne "extracting opinions..."
-xzcat $1 | jq -r '{"id": .id, "opinion": .casebody.data.opinions[]} | [.id, .opinion.type, .opinion.text, .opinion.author] | @csv' > opinions.csv
+xzcat "$1" | jq -r '{"id": .id, "opinion": .casebody.data.opinions[]} | [.id, .opinion.type, .opinion.text, .opinion.author] | @csv' > opinions.csv
 echo "done"
 
 echo -ne "extracting parties..."
-xzcat $1 | jq -r '{"id": .id, "obj": .casebody.data.parties[]} | [.id, .obj] | @csv' > parties.csv
+xzcat "$1" | jq -r '{"id": .id, "obj": .casebody.data.parties[]} | [.id, .obj] | @csv' > parties.csv
 echo "done"
 
 echo -ne "extracting attorneys..."
-xzcat $1 | jq -r '{"id": .id, "obj": .casebody.data.attorneys[]} | [.id, .obj] | @csv' > attorneys.csv
+xzcat "$1" | jq -r '{"id": .id, "obj": .casebody.data.attorneys[]} | [.id, .obj] | @csv' > attorneys.csv
 echo "done"
 
 echo -ne "extracting judges"
-xzcat $1 | jq -r '{"id": .id, "obj": .casebody.data.judges[]} | [.id, .obj] | @csv' > judges.csv
+xzcat "$1" | jq -r '{"id": .id, "obj": .casebody.data.judges[]} | [.id, .obj] | @csv' > judges.csv
 echo "done"
 
 echo "Loading into caselaw.sqlite"
@@ -41,7 +43,7 @@ sqlite3 -bail -echo caselaw.sqlite ".read import.sql"
 
 while [ $# -ne 0 ]
   do
-    echo "Current Parameter: $1 , Remaining $#"
-    case_law $1
+    echo "Current Parameter: '$1' , Remaining $#"
+    case_law "$1"
     shift
 done
