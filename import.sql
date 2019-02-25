@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS courts (
   jurisdiction_url TEXT,
   slug TEXT NOT NULL
 );
-INSERT INTO courts SELECT DISTINCT * from temporary_courts;
+INSERT OR IGNORE INTO courts SELECT DISTINCT * from temporary_courts;
 DROP TABLE temporary_courts;
 CREATE TABLE IF NOT EXISTS temporary_jurisdictions (
   jurisdiction_id INTEGER NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS jurisdictions (
   name_long TEXT NOT NULL,
   whitelisted TEXT NOT NULL
 );
-INSERT INTO jurisdictions SELECT DISTINCT * from temporary_jurisdictions;
+INSERT OR IGNORE INTO jurisdictions SELECT DISTINCT * from temporary_jurisdictions;
 DROP TABLE temporary_jurisdictions;
 CREATE TABLE IF NOT EXISTS cases (
   case_id INTEGER PRIMARY KEY NOT NULL,
